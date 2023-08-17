@@ -6,3 +6,4 @@ export const quotes = () => {
         </div>
     )
 }
+export default quotes

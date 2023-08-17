@@ -1,30 +1,25 @@
 import Link from 'next/link';
-import { Suspense } from 'react';
 import { CallbackButton } from './CallbackButton';
-import Table from './Table';
+import { useContext } from 'react';
+import { DataContext } from '../Context/DataContext';
 
 export type ContextType = {
   data: {
-    data: {
-      customers: { email_address: string, first_name: string, last_name: string }[]
-    }
+    message: string
   }
 }
 
-export const Display = ({ initData }: { initData?: any }) => {
-
-
+export const Display = () => {
+  const { data }: ContextType = useContext(DataContext)
+  console.log(data)
   return (
     <>
       {
-        true &&
+
         <>
           <CallbackButton callback={() => console.log('add')} text="Add"></CallbackButton>
           <CallbackButton callback={() => console.log('remove')} text="remove"></CallbackButton>
-          <Suspense>
-            <Table data={initData} />
-
-          </Suspense>
+          <img src={data?.message} alt="YOLO" />
           <Link
             href="/quoteDisplay/quotes"
           >
