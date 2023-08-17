@@ -53,8 +53,7 @@ const Prompts = () => {
       {CO2 !== null && fetch && (
         <DataProvider<any>
           requestMetas={{
-            // url: 'https://api.openai.com/v1/chat/completions',
-            url: '',
+            url: 'https://api.openai.com/v1/chat/completions',
             options: {
               method: 'post',
               headers: {

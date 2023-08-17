@@ -1,5 +1,3 @@
-import { useContext } from 'react'
-import { DataContext } from '../Context/DataContext'
 import styled from '@emotion/styled'
 import { Button } from '@mui/material'
 
@@ -10,8 +8,6 @@ export type ContextType = {
 }
 
 export const Display = () => {
-  const { data }: ContextType = useContext(DataContext)
-  console.log(data)
   return (
     <Container>
       <ImageContainer>
