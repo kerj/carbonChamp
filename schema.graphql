@@ -1,0 +1,2656 @@
+schema {
+  query: query_root
+  mutation: mutation_root
+  subscription: subscription_root
+}
+
+"""whether this query should be cached (Hasura Cloud only)"""
+directive @cached(
+  """measured in seconds"""
+  ttl: Int! = 60
+
+  """refresh the cache entry"""
+  refresh: Boolean! = false
+) on QUERY
+
+"""
+Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
+"""
+input Int_comparison_exp {
+  _eq: Int
+  _gt: Int
+  _gte: Int
+  _in: [Int!]
+  _is_null: Boolean
+  _lt: Int
+  _lte: Int
+  _neq: Int
+  _nin: [Int!]
+}
+
+"""
+Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'.
+"""
+input String_comparison_exp {
+  _eq: String
+  _gt: String
+  _gte: String
+
+  """does the column match the given case-insensitive pattern"""
+  _ilike: String
+  _in: [String!]
+
+  """
+  does the column match the given POSIX regular expression, case insensitive
+  """
+  _iregex: String
+  _is_null: Boolean
+
+  """does the column match the given pattern"""
+  _like: String
+  _lt: String
+  _lte: String
+  _neq: String
+
+  """does the column NOT match the given case-insensitive pattern"""
+  _nilike: String
+  _nin: [String!]
+
+  """
+  does the column NOT match the given POSIX regular expression, case insensitive
+  """
+  _niregex: String
+
+  """does the column NOT match the given pattern"""
+  _nlike: String
+
+  """
+  does the column NOT match the given POSIX regular expression, case sensitive
+  """
+  _nregex: String
+
+  """does the column NOT match the given SQL regular expression"""
+  _nsimilar: String
+
+  """
+  does the column match the given POSIX regular expression, case sensitive
+  """
+  _regex: String
+
+  """does the column match the given SQL regular expression"""
+  _similar: String
+}
+
+scalar bigint
+
+"""
+Boolean expression to compare columns of type "bigint". All fields are combined with logical 'AND'.
+"""
+input bigint_comparison_exp {
+  _eq: bigint
+  _gt: bigint
+  _gte: bigint
+  _in: [bigint!]
+  _is_null: Boolean
+  _lt: bigint
+  _lte: bigint
+  _neq: bigint
+  _nin: [bigint!]
+}
+
+"""ordering argument of a cursor"""
+enum cursor_ordering {
+  """ascending ordering of the cursor"""
+  ASC
+
+  """descending ordering of the cursor"""
+  DESC
+}
+
+"""
+columns and relationships of "customers"
+"""
+type customers {
+  customer_id: String!
+  email_address: String
+  first_name: String
+  last_name: String
+
+  """An array relationship"""
+  sale_transactions(
+    """distinct select on columns"""
+    distinct_on: [sale_transactions_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [sale_transactions_order_by!]
+
+    """filter the rows returned"""
+    where: sale_transactions_bool_exp
+  ): [sale_transactions!]!
+
+  """An aggregate relationship"""
+  sale_transactions_aggregate(
+    """distinct select on columns"""
+    distinct_on: [sale_transactions_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [sale_transactions_order_by!]
+
+    """filter the rows returned"""
+    where: sale_transactions_bool_exp
+  ): sale_transactions_aggregate!
+}
+
+"""
+aggregated selection of "customers"
+"""
+type customers_aggregate {
+  aggregate: customers_aggregate_fields
+  nodes: [customers!]!
+}
+
+"""
+aggregate fields of "customers"
+"""
+type customers_aggregate_fields {
+  count(columns: [customers_select_column!], distinct: Boolean): Int!
+  max: customers_max_fields
+  min: customers_min_fields
+}
+
+"""
+Boolean expression to filter rows from the table "customers". All fields are combined with a logical 'AND'.
+"""
+input customers_bool_exp {
+  _and: [customers_bool_exp!]
+  _not: customers_bool_exp
+  _or: [customers_bool_exp!]
+  customer_id: String_comparison_exp
+  email_address: String_comparison_exp
+  first_name: String_comparison_exp
+  last_name: String_comparison_exp
+  sale_transactions: sale_transactions_bool_exp
+  sale_transactions_aggregate: sale_transactions_aggregate_bool_exp
+}
+
+"""
+unique or primary key constraints on table "customers"
+"""
+enum customers_constraint {
+  """
+  unique or primary key constraint on columns "customer_id"
+  """
+  customers_pkey
+}
+
+"""
+input type for inserting data into table "customers"
+"""
+input customers_insert_input {
+  customer_id: String
+  email_address: String
+  first_name: String
+  last_name: String
+  sale_transactions: sale_transactions_arr_rel_insert_input
+}
+
+"""aggregate max on columns"""
+type customers_max_fields {
+  customer_id: String
+  email_address: String
+  first_name: String
+  last_name: String
+}
+
+"""aggregate min on columns"""
+type customers_min_fields {
+  customer_id: String
+  email_address: String
+  first_name: String
+  last_name: String
+}
+
+"""
+response of any mutation on the table "customers"
+"""
+type customers_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [customers!]!
+}
+
+"""
+input type for inserting object relation for remote table "customers"
+"""
+input customers_obj_rel_insert_input {
+  data: customers_insert_input!
+
+  """upsert condition"""
+  on_conflict: customers_on_conflict
+}
+
+"""
+on_conflict condition type for table "customers"
+"""
+input customers_on_conflict {
+  constraint: customers_constraint!
+  update_columns: [customers_update_column!]! = []
+  where: customers_bool_exp
+}
+
+"""Ordering options when selecting data from "customers"."""
+input customers_order_by {
+  customer_id: order_by
+  email_address: order_by
+  first_name: order_by
+  last_name: order_by
+  sale_transactions_aggregate: sale_transactions_aggregate_order_by
+}
+
+"""primary key columns input for table: customers"""
+input customers_pk_columns_input {
+  customer_id: String!
+}
+
+"""
+select columns of table "customers"
+"""
+enum customers_select_column {
+  """column name"""
+  customer_id
+
+  """column name"""
+  email_address
+
+  """column name"""
+  first_name
+
+  """column name"""
+  last_name
+}
+
+"""
+input type for updating data in table "customers"
+"""
+input customers_set_input {
+  customer_id: String
+  email_address: String
+  first_name: String
+  last_name: String
+}
+
+"""
+Streaming cursor of the table "customers"
+"""
+input customers_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: customers_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input customers_stream_cursor_value_input {
+  customer_id: String
+  email_address: String
+  first_name: String
+  last_name: String
+}
+
+"""
+update columns of table "customers"
+"""
+enum customers_update_column {
+  """column name"""
+  customer_id
+
+  """column name"""
+  email_address
+
+  """column name"""
+  first_name
+
+  """column name"""
+  last_name
+}
+
+input customers_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: customers_set_input
+
+  """filter the rows which have to be updated"""
+  where: customers_bool_exp!
+}
+
+scalar date
+
+"""
+Boolean expression to compare columns of type "date". All fields are combined with logical 'AND'.
+"""
+input date_comparison_exp {
+  _eq: date
+  _gt: date
+  _gte: date
+  _in: [date!]
+  _is_null: Boolean
+  _lt: date
+  _lte: date
+  _neq: date
+  _nin: [date!]
+}
+
+"""
+columns and relationships of "employees"
+"""
+type employees {
+  employee_id: String!
+
+  """An array relationship"""
+  sale_transactions(
+    """distinct select on columns"""
+    distinct_on: [sale_transactions_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [sale_transactions_order_by!]
+
+    """filter the rows returned"""
+    where: sale_transactions_bool_exp
+  ): [sale_transactions!]!
+
+  """An aggregate relationship"""
+  sale_transactions_aggregate(
+    """distinct select on columns"""
+    distinct_on: [sale_transactions_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [sale_transactions_order_by!]
+
+    """filter the rows returned"""
+    where: sale_transactions_bool_exp
+  ): sale_transactions_aggregate!
+  start_date: date
+}
+
+"""
+aggregated selection of "employees"
+"""
+type employees_aggregate {
+  aggregate: employees_aggregate_fields
+  nodes: [employees!]!
+}
+
+"""
+aggregate fields of "employees"
+"""
+type employees_aggregate_fields {
+  count(columns: [employees_select_column!], distinct: Boolean): Int!
+  max: employees_max_fields
+  min: employees_min_fields
+}
+
+"""
+Boolean expression to filter rows from the table "employees". All fields are combined with a logical 'AND'.
+"""
+input employees_bool_exp {
+  _and: [employees_bool_exp!]
+  _not: employees_bool_exp
+  _or: [employees_bool_exp!]
+  employee_id: String_comparison_exp
+  sale_transactions: sale_transactions_bool_exp
+  sale_transactions_aggregate: sale_transactions_aggregate_bool_exp
+  start_date: date_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "employees"
+"""
+enum employees_constraint {
+  """
+  unique or primary key constraint on columns "employee_id"
+  """
+  employees_pkey
+}
+
+"""
+input type for inserting data into table "employees"
+"""
+input employees_insert_input {
+  employee_id: String
+  sale_transactions: sale_transactions_arr_rel_insert_input
+  start_date: date
+}
+
+"""aggregate max on columns"""
+type employees_max_fields {
+  employee_id: String
+  start_date: date
+}
+
+"""aggregate min on columns"""
+type employees_min_fields {
+  employee_id: String
+  start_date: date
+}
+
+"""
+response of any mutation on the table "employees"
+"""
+type employees_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [employees!]!
+}
+
+"""
+input type for inserting object relation for remote table "employees"
+"""
+input employees_obj_rel_insert_input {
+  data: employees_insert_input!
+
+  """upsert condition"""
+  on_conflict: employees_on_conflict
+}
+
+"""
+on_conflict condition type for table "employees"
+"""
+input employees_on_conflict {
+  constraint: employees_constraint!
+  update_columns: [employees_update_column!]! = []
+  where: employees_bool_exp
+}
+
+"""Ordering options when selecting data from "employees"."""
+input employees_order_by {
+  employee_id: order_by
+  sale_transactions_aggregate: sale_transactions_aggregate_order_by
+  start_date: order_by
+}
+
+"""primary key columns input for table: employees"""
+input employees_pk_columns_input {
+  employee_id: String!
+}
+
+"""
+select columns of table "employees"
+"""
+enum employees_select_column {
+  """column name"""
+  employee_id
+
+  """column name"""
+  start_date
+}
+
+"""
+input type for updating data in table "employees"
+"""
+input employees_set_input {
+  employee_id: String
+  start_date: date
+}
+
+"""
+Streaming cursor of the table "employees"
+"""
+input employees_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: employees_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input employees_stream_cursor_value_input {
+  employee_id: String
+  start_date: date
+}
+
+"""
+update columns of table "employees"
+"""
+enum employees_update_column {
+  """column name"""
+  employee_id
+
+  """column name"""
+  start_date
+}
+
+input employees_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: employees_set_input
+
+  """filter the rows which have to be updated"""
+  where: employees_bool_exp!
+}
+
+"""
+columns and relationships of "inventory"
+"""
+type inventory {
+  brand: String
+  category: String
+  item_id: String!
+  model: String
+  msrp: numeric
+  quantity: Int
+  sku: String
+
+  """An array relationship"""
+  sold_items(
+    """distinct select on columns"""
+    distinct_on: [sold_items_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [sold_items_order_by!]
+
+    """filter the rows returned"""
+    where: sold_items_bool_exp
+  ): [sold_items!]!
+
+  """An aggregate relationship"""
+  sold_items_aggregate(
+    """distinct select on columns"""
+    distinct_on: [sold_items_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [sold_items_order_by!]
+
+    """filter the rows returned"""
+    where: sold_items_bool_exp
+  ): sold_items_aggregate!
+  supplier: String
+  unit_price: numeric
+  upc: String
+}
+
+"""
+aggregated selection of "inventory"
+"""
+type inventory_aggregate {
+  aggregate: inventory_aggregate_fields
+  nodes: [inventory!]!
+}
+
+"""
+aggregate fields of "inventory"
+"""
+type inventory_aggregate_fields {
+  avg: inventory_avg_fields
+  count(columns: [inventory_select_column!], distinct: Boolean): Int!
+  max: inventory_max_fields
+  min: inventory_min_fields
+  stddev: inventory_stddev_fields
+  stddev_pop: inventory_stddev_pop_fields
+  stddev_samp: inventory_stddev_samp_fields
+  sum: inventory_sum_fields
+  var_pop: inventory_var_pop_fields
+  var_samp: inventory_var_samp_fields
+  variance: inventory_variance_fields
+}
+
+"""aggregate avg on columns"""
+type inventory_avg_fields {
+  msrp: Float
+  quantity: Float
+  unit_price: Float
+}
+
+"""
+Boolean expression to filter rows from the table "inventory". All fields are combined with a logical 'AND'.
+"""
+input inventory_bool_exp {
+  _and: [inventory_bool_exp!]
+  _not: inventory_bool_exp
+  _or: [inventory_bool_exp!]
+  brand: String_comparison_exp
+  category: String_comparison_exp
+  item_id: String_comparison_exp
+  model: String_comparison_exp
+  msrp: numeric_comparison_exp
+  quantity: Int_comparison_exp
+  sku: String_comparison_exp
+  sold_items: sold_items_bool_exp
+  sold_items_aggregate: sold_items_aggregate_bool_exp
+  supplier: String_comparison_exp
+  unit_price: numeric_comparison_exp
+  upc: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "inventory"
+"""
+enum inventory_constraint {
+  """
+  unique or primary key constraint on columns "item_id"
+  """
+  inventory_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "inventory"
+"""
+input inventory_inc_input {
+  msrp: numeric
+  quantity: Int
+  unit_price: numeric
+}
+
+"""
+input type for inserting data into table "inventory"
+"""
+input inventory_insert_input {
+  brand: String
+  category: String
+  item_id: String
+  model: String
+  msrp: numeric
+  quantity: Int
+  sku: String
+  sold_items: sold_items_arr_rel_insert_input
+  supplier: String
+  unit_price: numeric
+  upc: String
+}
+
+"""aggregate max on columns"""
+type inventory_max_fields {
+  brand: String
+  category: String
+  item_id: String
+  model: String
+  msrp: numeric
+  quantity: Int
+  sku: String
+  supplier: String
+  unit_price: numeric
+  upc: String
+}
+
+"""aggregate min on columns"""
+type inventory_min_fields {
+  brand: String
+  category: String
+  item_id: String
+  model: String
+  msrp: numeric
+  quantity: Int
+  sku: String
+  supplier: String
+  unit_price: numeric
+  upc: String
+}
+
+"""
+response of any mutation on the table "inventory"
+"""
+type inventory_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [inventory!]!
+}
+
+"""
+input type for inserting object relation for remote table "inventory"
+"""
+input inventory_obj_rel_insert_input {
+  data: inventory_insert_input!
+
+  """upsert condition"""
+  on_conflict: inventory_on_conflict
+}
+
+"""
+on_conflict condition type for table "inventory"
+"""
+input inventory_on_conflict {
+  constraint: inventory_constraint!
+  update_columns: [inventory_update_column!]! = []
+  where: inventory_bool_exp
+}
+
+"""Ordering options when selecting data from "inventory"."""
+input inventory_order_by {
+  brand: order_by
+  category: order_by
+  item_id: order_by
+  model: order_by
+  msrp: order_by
+  quantity: order_by
+  sku: order_by
+  sold_items_aggregate: sold_items_aggregate_order_by
+  supplier: order_by
+  unit_price: order_by
+  upc: order_by
+}
+
+"""primary key columns input for table: inventory"""
+input inventory_pk_columns_input {
+  item_id: String!
+}
+
+"""
+select columns of table "inventory"
+"""
+enum inventory_select_column {
+  """column name"""
+  brand
+
+  """column name"""
+  category
+
+  """column name"""
+  item_id
+
+  """column name"""
+  model
+
+  """column name"""
+  msrp
+
+  """column name"""
+  quantity
+
+  """column name"""
+  sku
+
+  """column name"""
+  supplier
+
+  """column name"""
+  unit_price
+
+  """column name"""
+  upc
+}
+
+"""
+input type for updating data in table "inventory"
+"""
+input inventory_set_input {
+  brand: String
+  category: String
+  item_id: String
+  model: String
+  msrp: numeric
+  quantity: Int
+  sku: String
+  supplier: String
+  unit_price: numeric
+  upc: String
+}
+
+"""aggregate stddev on columns"""
+type inventory_stddev_fields {
+  msrp: Float
+  quantity: Float
+  unit_price: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type inventory_stddev_pop_fields {
+  msrp: Float
+  quantity: Float
+  unit_price: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type inventory_stddev_samp_fields {
+  msrp: Float
+  quantity: Float
+  unit_price: Float
+}
+
+"""
+Streaming cursor of the table "inventory"
+"""
+input inventory_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: inventory_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input inventory_stream_cursor_value_input {
+  brand: String
+  category: String
+  item_id: String
+  model: String
+  msrp: numeric
+  quantity: Int
+  sku: String
+  supplier: String
+  unit_price: numeric
+  upc: String
+}
+
+"""aggregate sum on columns"""
+type inventory_sum_fields {
+  msrp: numeric
+  quantity: Int
+  unit_price: numeric
+}
+
+"""
+update columns of table "inventory"
+"""
+enum inventory_update_column {
+  """column name"""
+  brand
+
+  """column name"""
+  category
+
+  """column name"""
+  item_id
+
+  """column name"""
+  model
+
+  """column name"""
+  msrp
+
+  """column name"""
+  quantity
+
+  """column name"""
+  sku
+
+  """column name"""
+  supplier
+
+  """column name"""
+  unit_price
+
+  """column name"""
+  upc
+}
+
+input inventory_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: inventory_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: inventory_set_input
+
+  """filter the rows which have to be updated"""
+  where: inventory_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type inventory_var_pop_fields {
+  msrp: Float
+  quantity: Float
+  unit_price: Float
+}
+
+"""aggregate var_samp on columns"""
+type inventory_var_samp_fields {
+  msrp: Float
+  quantity: Float
+  unit_price: Float
+}
+
+"""aggregate variance on columns"""
+type inventory_variance_fields {
+  msrp: Float
+  quantity: Float
+  unit_price: Float
+}
+
+"""mutation root"""
+type mutation_root {
+  """
+  delete data from the table: "customers"
+  """
+  delete_customers(
+    """filter the rows which have to be deleted"""
+    where: customers_bool_exp!
+  ): customers_mutation_response
+
+  """
+  delete single row from the table: "customers"
+  """
+  delete_customers_by_pk(customer_id: String!): customers
+
+  """
+  delete data from the table: "employees"
+  """
+  delete_employees(
+    """filter the rows which have to be deleted"""
+    where: employees_bool_exp!
+  ): employees_mutation_response
+
+  """
+  delete single row from the table: "employees"
+  """
+  delete_employees_by_pk(employee_id: String!): employees
+
+  """
+  delete data from the table: "inventory"
+  """
+  delete_inventory(
+    """filter the rows which have to be deleted"""
+    where: inventory_bool_exp!
+  ): inventory_mutation_response
+
+  """
+  delete single row from the table: "inventory"
+  """
+  delete_inventory_by_pk(item_id: String!): inventory
+
+  """
+  delete data from the table: "sale_transactions"
+  """
+  delete_sale_transactions(
+    """filter the rows which have to be deleted"""
+    where: sale_transactions_bool_exp!
+  ): sale_transactions_mutation_response
+
+  """
+  delete single row from the table: "sale_transactions"
+  """
+  delete_sale_transactions_by_pk(transaction_id: String!): sale_transactions
+
+  """
+  delete data from the table: "sold_items"
+  """
+  delete_sold_items(
+    """filter the rows which have to be deleted"""
+    where: sold_items_bool_exp!
+  ): sold_items_mutation_response
+
+  """
+  delete single row from the table: "sold_items"
+  """
+  delete_sold_items_by_pk(sold_item_count: bigint!): sold_items
+
+  """
+  insert data into the table: "customers"
+  """
+  insert_customers(
+    """the rows to be inserted"""
+    objects: [customers_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: customers_on_conflict
+  ): customers_mutation_response
+
+  """
+  insert a single row into the table: "customers"
+  """
+  insert_customers_one(
+    """the row to be inserted"""
+    object: customers_insert_input!
+
+    """upsert condition"""
+    on_conflict: customers_on_conflict
+  ): customers
+
+  """
+  insert data into the table: "employees"
+  """
+  insert_employees(
+    """the rows to be inserted"""
+    objects: [employees_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: employees_on_conflict
+  ): employees_mutation_response
+
+  """
+  insert a single row into the table: "employees"
+  """
+  insert_employees_one(
+    """the row to be inserted"""
+    object: employees_insert_input!
+
+    """upsert condition"""
+    on_conflict: employees_on_conflict
+  ): employees
+
+  """
+  insert data into the table: "inventory"
+  """
+  insert_inventory(
+    """the rows to be inserted"""
+    objects: [inventory_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: inventory_on_conflict
+  ): inventory_mutation_response
+
+  """
+  insert a single row into the table: "inventory"
+  """
+  insert_inventory_one(
+    """the row to be inserted"""
+    object: inventory_insert_input!
+
+    """upsert condition"""
+    on_conflict: inventory_on_conflict
+  ): inventory
+
+  """
+  insert data into the table: "sale_transactions"
+  """
+  insert_sale_transactions(
+    """the rows to be inserted"""
+    objects: [sale_transactions_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: sale_transactions_on_conflict
+  ): sale_transactions_mutation_response
+
+  """
+  insert a single row into the table: "sale_transactions"
+  """
+  insert_sale_transactions_one(
+    """the row to be inserted"""
+    object: sale_transactions_insert_input!
+
+    """upsert condition"""
+    on_conflict: sale_transactions_on_conflict
+  ): sale_transactions
+
+  """
+  insert data into the table: "sold_items"
+  """
+  insert_sold_items(
+    """the rows to be inserted"""
+    objects: [sold_items_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: sold_items_on_conflict
+  ): sold_items_mutation_response
+
+  """
+  insert a single row into the table: "sold_items"
+  """
+  insert_sold_items_one(
+    """the row to be inserted"""
+    object: sold_items_insert_input!
+
+    """upsert condition"""
+    on_conflict: sold_items_on_conflict
+  ): sold_items
+
+  """
+  update data of the table: "customers"
+  """
+  update_customers(
+    """sets the columns of the filtered rows to the given values"""
+    _set: customers_set_input
+
+    """filter the rows which have to be updated"""
+    where: customers_bool_exp!
+  ): customers_mutation_response
+
+  """
+  update single row of the table: "customers"
+  """
+  update_customers_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: customers_set_input
+    pk_columns: customers_pk_columns_input!
+  ): customers
+
+  """
+  update multiples rows of table: "customers"
+  """
+  update_customers_many(
+    """updates to execute, in order"""
+    updates: [customers_updates!]!
+  ): [customers_mutation_response]
+
+  """
+  update data of the table: "employees"
+  """
+  update_employees(
+    """sets the columns of the filtered rows to the given values"""
+    _set: employees_set_input
+
+    """filter the rows which have to be updated"""
+    where: employees_bool_exp!
+  ): employees_mutation_response
+
+  """
+  update single row of the table: "employees"
+  """
+  update_employees_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: employees_set_input
+    pk_columns: employees_pk_columns_input!
+  ): employees
+
+  """
+  update multiples rows of table: "employees"
+  """
+  update_employees_many(
+    """updates to execute, in order"""
+    updates: [employees_updates!]!
+  ): [employees_mutation_response]
+
+  """
+  update data of the table: "inventory"
+  """
+  update_inventory(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: inventory_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: inventory_set_input
+
+    """filter the rows which have to be updated"""
+    where: inventory_bool_exp!
+  ): inventory_mutation_response
+
+  """
+  update single row of the table: "inventory"
+  """
+  update_inventory_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: inventory_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: inventory_set_input
+    pk_columns: inventory_pk_columns_input!
+  ): inventory
+
+  """
+  update multiples rows of table: "inventory"
+  """
+  update_inventory_many(
+    """updates to execute, in order"""
+    updates: [inventory_updates!]!
+  ): [inventory_mutation_response]
+
+  """
+  update data of the table: "sale_transactions"
+  """
+  update_sale_transactions(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: sale_transactions_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: sale_transactions_set_input
+
+    """filter the rows which have to be updated"""
+    where: sale_transactions_bool_exp!
+  ): sale_transactions_mutation_response
+
+  """
+  update single row of the table: "sale_transactions"
+  """
+  update_sale_transactions_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: sale_transactions_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: sale_transactions_set_input
+    pk_columns: sale_transactions_pk_columns_input!
+  ): sale_transactions
+
+  """
+  update multiples rows of table: "sale_transactions"
+  """
+  update_sale_transactions_many(
+    """updates to execute, in order"""
+    updates: [sale_transactions_updates!]!
+  ): [sale_transactions_mutation_response]
+
+  """
+  update data of the table: "sold_items"
+  """
+  update_sold_items(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: sold_items_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: sold_items_set_input
+
+    """filter the rows which have to be updated"""
+    where: sold_items_bool_exp!
+  ): sold_items_mutation_response
+
+  """
+  update single row of the table: "sold_items"
+  """
+  update_sold_items_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: sold_items_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: sold_items_set_input
+    pk_columns: sold_items_pk_columns_input!
+  ): sold_items
+
+  """
+  update multiples rows of table: "sold_items"
+  """
+  update_sold_items_many(
+    """updates to execute, in order"""
+    updates: [sold_items_updates!]!
+  ): [sold_items_mutation_response]
+}
+
+scalar numeric
+
+"""
+Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'.
+"""
+input numeric_comparison_exp {
+  _eq: numeric
+  _gt: numeric
+  _gte: numeric
+  _in: [numeric!]
+  _is_null: Boolean
+  _lt: numeric
+  _lte: numeric
+  _neq: numeric
+  _nin: [numeric!]
+}
+
+"""column ordering options"""
+enum order_by {
+  """in ascending order, nulls last"""
+  asc
+
+  """in ascending order, nulls first"""
+  asc_nulls_first
+
+  """in ascending order, nulls last"""
+  asc_nulls_last
+
+  """in descending order, nulls first"""
+  desc
+
+  """in descending order, nulls first"""
+  desc_nulls_first
+
+  """in descending order, nulls last"""
+  desc_nulls_last
+}
+
+type query_root {
+  """
+  fetch data from the table: "customers"
+  """
+  customers(
+    """distinct select on columns"""
+    distinct_on: [customers_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [customers_order_by!]
+
+    """filter the rows returned"""
+    where: customers_bool_exp
+  ): [customers!]!
+
+  """
+  fetch aggregated fields from the table: "customers"
+  """
+  customers_aggregate(
+    """distinct select on columns"""
+    distinct_on: [customers_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [customers_order_by!]
+
+    """filter the rows returned"""
+    where: customers_bool_exp
+  ): customers_aggregate!
+
+  """fetch data from the table: "customers" using primary key columns"""
+  customers_by_pk(customer_id: String!): customers
+
+  """
+  fetch data from the table: "employees"
+  """
+  employees(
+    """distinct select on columns"""
+    distinct_on: [employees_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [employees_order_by!]
+
+    """filter the rows returned"""
+    where: employees_bool_exp
+  ): [employees!]!
+
+  """
+  fetch aggregated fields from the table: "employees"
+  """
+  employees_aggregate(
+    """distinct select on columns"""
+    distinct_on: [employees_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [employees_order_by!]
+
+    """filter the rows returned"""
+    where: employees_bool_exp
+  ): employees_aggregate!
+
+  """fetch data from the table: "employees" using primary key columns"""
+  employees_by_pk(employee_id: String!): employees
+
+  """
+  fetch data from the table: "inventory"
+  """
+  inventory(
+    """distinct select on columns"""
+    distinct_on: [inventory_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [inventory_order_by!]
+
+    """filter the rows returned"""
+    where: inventory_bool_exp
+  ): [inventory!]!
+
+  """
+  fetch aggregated fields from the table: "inventory"
+  """
+  inventory_aggregate(
+    """distinct select on columns"""
+    distinct_on: [inventory_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [inventory_order_by!]
+
+    """filter the rows returned"""
+    where: inventory_bool_exp
+  ): inventory_aggregate!
+
+  """fetch data from the table: "inventory" using primary key columns"""
+  inventory_by_pk(item_id: String!): inventory
+
+  """An array relationship"""
+  sale_transactions(
+    """distinct select on columns"""
+    distinct_on: [sale_transactions_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [sale_transactions_order_by!]
+
+    """filter the rows returned"""
+    where: sale_transactions_bool_exp
+  ): [sale_transactions!]!
+
+  """An aggregate relationship"""
+  sale_transactions_aggregate(
+    """distinct select on columns"""
+    distinct_on: [sale_transactions_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [sale_transactions_order_by!]
+
+    """filter the rows returned"""
+    where: sale_transactions_bool_exp
+  ): sale_transactions_aggregate!
+
+  """
+  fetch data from the table: "sale_transactions" using primary key columns
+  """
+  sale_transactions_by_pk(transaction_id: String!): sale_transactions
+
+  """An array relationship"""
+  sold_items(
+    """distinct select on columns"""
+    distinct_on: [sold_items_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [sold_items_order_by!]
+
+    """filter the rows returned"""
+    where: sold_items_bool_exp
+  ): [sold_items!]!
+
+  """An aggregate relationship"""
+  sold_items_aggregate(
+    """distinct select on columns"""
+    distinct_on: [sold_items_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [sold_items_order_by!]
+
+    """filter the rows returned"""
+    where: sold_items_bool_exp
+  ): sold_items_aggregate!
+
+  """fetch data from the table: "sold_items" using primary key columns"""
+  sold_items_by_pk(sold_item_count: bigint!): sold_items
+}
+
+"""
+columns and relationships of "sale_transactions"
+"""
+type sale_transactions {
+  """An object relationship"""
+  customer: customers
+  customer_id: String
+
+  """An object relationship"""
+  employee: employees
+  employee_id: String
+  item_count: Int
+  net_amount: numeric
+  profit: numeric
+
+  """An array relationship"""
+  sold_items(
+    """distinct select on columns"""
+    distinct_on: [sold_items_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [sold_items_order_by!]
+
+    """filter the rows returned"""
+    where: sold_items_bool_exp
+  ): [sold_items!]!
+
+  """An aggregate relationship"""
+  sold_items_aggregate(
+    """distinct select on columns"""
+    distinct_on: [sold_items_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [sold_items_order_by!]
+
+    """filter the rows returned"""
+    where: sold_items_bool_exp
+  ): sold_items_aggregate!
+  transaction_date: date
+  transaction_id: String!
+}
+
+"""
+aggregated selection of "sale_transactions"
+"""
+type sale_transactions_aggregate {
+  aggregate: sale_transactions_aggregate_fields
+  nodes: [sale_transactions!]!
+}
+
+input sale_transactions_aggregate_bool_exp {
+  count: sale_transactions_aggregate_bool_exp_count
+}
+
+input sale_transactions_aggregate_bool_exp_count {
+  arguments: [sale_transactions_select_column!]
+  distinct: Boolean
+  filter: sale_transactions_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"""
+aggregate fields of "sale_transactions"
+"""
+type sale_transactions_aggregate_fields {
+  avg: sale_transactions_avg_fields
+  count(columns: [sale_transactions_select_column!], distinct: Boolean): Int!
+  max: sale_transactions_max_fields
+  min: sale_transactions_min_fields
+  stddev: sale_transactions_stddev_fields
+  stddev_pop: sale_transactions_stddev_pop_fields
+  stddev_samp: sale_transactions_stddev_samp_fields
+  sum: sale_transactions_sum_fields
+  var_pop: sale_transactions_var_pop_fields
+  var_samp: sale_transactions_var_samp_fields
+  variance: sale_transactions_variance_fields
+}
+
+"""
+order by aggregate values of table "sale_transactions"
+"""
+input sale_transactions_aggregate_order_by {
+  avg: sale_transactions_avg_order_by
+  count: order_by
+  max: sale_transactions_max_order_by
+  min: sale_transactions_min_order_by
+  stddev: sale_transactions_stddev_order_by
+  stddev_pop: sale_transactions_stddev_pop_order_by
+  stddev_samp: sale_transactions_stddev_samp_order_by
+  sum: sale_transactions_sum_order_by
+  var_pop: sale_transactions_var_pop_order_by
+  var_samp: sale_transactions_var_samp_order_by
+  variance: sale_transactions_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "sale_transactions"
+"""
+input sale_transactions_arr_rel_insert_input {
+  data: [sale_transactions_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: sale_transactions_on_conflict
+}
+
+"""aggregate avg on columns"""
+type sale_transactions_avg_fields {
+  item_count: Float
+  net_amount: Float
+  profit: Float
+}
+
+"""
+order by avg() on columns of table "sale_transactions"
+"""
+input sale_transactions_avg_order_by {
+  item_count: order_by
+  net_amount: order_by
+  profit: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "sale_transactions". All fields are combined with a logical 'AND'.
+"""
+input sale_transactions_bool_exp {
+  _and: [sale_transactions_bool_exp!]
+  _not: sale_transactions_bool_exp
+  _or: [sale_transactions_bool_exp!]
+  customer: customers_bool_exp
+  customer_id: String_comparison_exp
+  employee: employees_bool_exp
+  employee_id: String_comparison_exp
+  item_count: Int_comparison_exp
+  net_amount: numeric_comparison_exp
+  profit: numeric_comparison_exp
+  sold_items: sold_items_bool_exp
+  sold_items_aggregate: sold_items_aggregate_bool_exp
+  transaction_date: date_comparison_exp
+  transaction_id: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "sale_transactions"
+"""
+enum sale_transactions_constraint {
+  """
+  unique or primary key constraint on columns "transaction_id"
+  """
+  sale_transactions_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "sale_transactions"
+"""
+input sale_transactions_inc_input {
+  item_count: Int
+  net_amount: numeric
+  profit: numeric
+}
+
+"""
+input type for inserting data into table "sale_transactions"
+"""
+input sale_transactions_insert_input {
+  customer: customers_obj_rel_insert_input
+  customer_id: String
+  employee: employees_obj_rel_insert_input
+  employee_id: String
+  item_count: Int
+  net_amount: numeric
+  profit: numeric
+  sold_items: sold_items_arr_rel_insert_input
+  transaction_date: date
+  transaction_id: String
+}
+
+"""aggregate max on columns"""
+type sale_transactions_max_fields {
+  customer_id: String
+  employee_id: String
+  item_count: Int
+  net_amount: numeric
+  profit: numeric
+  transaction_date: date
+  transaction_id: String
+}
+
+"""
+order by max() on columns of table "sale_transactions"
+"""
+input sale_transactions_max_order_by {
+  customer_id: order_by
+  employee_id: order_by
+  item_count: order_by
+  net_amount: order_by
+  profit: order_by
+  transaction_date: order_by
+  transaction_id: order_by
+}
+
+"""aggregate min on columns"""
+type sale_transactions_min_fields {
+  customer_id: String
+  employee_id: String
+  item_count: Int
+  net_amount: numeric
+  profit: numeric
+  transaction_date: date
+  transaction_id: String
+}
+
+"""
+order by min() on columns of table "sale_transactions"
+"""
+input sale_transactions_min_order_by {
+  customer_id: order_by
+  employee_id: order_by
+  item_count: order_by
+  net_amount: order_by
+  profit: order_by
+  transaction_date: order_by
+  transaction_id: order_by
+}
+
+"""
+response of any mutation on the table "sale_transactions"
+"""
+type sale_transactions_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [sale_transactions!]!
+}
+
+"""
+input type for inserting object relation for remote table "sale_transactions"
+"""
+input sale_transactions_obj_rel_insert_input {
+  data: sale_transactions_insert_input!
+
+  """upsert condition"""
+  on_conflict: sale_transactions_on_conflict
+}
+
+"""
+on_conflict condition type for table "sale_transactions"
+"""
+input sale_transactions_on_conflict {
+  constraint: sale_transactions_constraint!
+  update_columns: [sale_transactions_update_column!]! = []
+  where: sale_transactions_bool_exp
+}
+
+"""Ordering options when selecting data from "sale_transactions"."""
+input sale_transactions_order_by {
+  customer: customers_order_by
+  customer_id: order_by
+  employee: employees_order_by
+  employee_id: order_by
+  item_count: order_by
+  net_amount: order_by
+  profit: order_by
+  sold_items_aggregate: sold_items_aggregate_order_by
+  transaction_date: order_by
+  transaction_id: order_by
+}
+
+"""primary key columns input for table: sale_transactions"""
+input sale_transactions_pk_columns_input {
+  transaction_id: String!
+}
+
+"""
+select columns of table "sale_transactions"
+"""
+enum sale_transactions_select_column {
+  """column name"""
+  customer_id
+
+  """column name"""
+  employee_id
+
+  """column name"""
+  item_count
+
+  """column name"""
+  net_amount
+
+  """column name"""
+  profit
+
+  """column name"""
+  transaction_date
+
+  """column name"""
+  transaction_id
+}
+
+"""
+input type for updating data in table "sale_transactions"
+"""
+input sale_transactions_set_input {
+  customer_id: String
+  employee_id: String
+  item_count: Int
+  net_amount: numeric
+  profit: numeric
+  transaction_date: date
+  transaction_id: String
+}
+
+"""aggregate stddev on columns"""
+type sale_transactions_stddev_fields {
+  item_count: Float
+  net_amount: Float
+  profit: Float
+}
+
+"""
+order by stddev() on columns of table "sale_transactions"
+"""
+input sale_transactions_stddev_order_by {
+  item_count: order_by
+  net_amount: order_by
+  profit: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type sale_transactions_stddev_pop_fields {
+  item_count: Float
+  net_amount: Float
+  profit: Float
+}
+
+"""
+order by stddev_pop() on columns of table "sale_transactions"
+"""
+input sale_transactions_stddev_pop_order_by {
+  item_count: order_by
+  net_amount: order_by
+  profit: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type sale_transactions_stddev_samp_fields {
+  item_count: Float
+  net_amount: Float
+  profit: Float
+}
+
+"""
+order by stddev_samp() on columns of table "sale_transactions"
+"""
+input sale_transactions_stddev_samp_order_by {
+  item_count: order_by
+  net_amount: order_by
+  profit: order_by
+}
+
+"""
+Streaming cursor of the table "sale_transactions"
+"""
+input sale_transactions_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: sale_transactions_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input sale_transactions_stream_cursor_value_input {
+  customer_id: String
+  employee_id: String
+  item_count: Int
+  net_amount: numeric
+  profit: numeric
+  transaction_date: date
+  transaction_id: String
+}
+
+"""aggregate sum on columns"""
+type sale_transactions_sum_fields {
+  item_count: Int
+  net_amount: numeric
+  profit: numeric
+}
+
+"""
+order by sum() on columns of table "sale_transactions"
+"""
+input sale_transactions_sum_order_by {
+  item_count: order_by
+  net_amount: order_by
+  profit: order_by
+}
+
+"""
+update columns of table "sale_transactions"
+"""
+enum sale_transactions_update_column {
+  """column name"""
+  customer_id
+
+  """column name"""
+  employee_id
+
+  """column name"""
+  item_count
+
+  """column name"""
+  net_amount
+
+  """column name"""
+  profit
+
+  """column name"""
+  transaction_date
+
+  """column name"""
+  transaction_id
+}
+
+input sale_transactions_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: sale_transactions_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: sale_transactions_set_input
+
+  """filter the rows which have to be updated"""
+  where: sale_transactions_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type sale_transactions_var_pop_fields {
+  item_count: Float
+  net_amount: Float
+  profit: Float
+}
+
+"""
+order by var_pop() on columns of table "sale_transactions"
+"""
+input sale_transactions_var_pop_order_by {
+  item_count: order_by
+  net_amount: order_by
+  profit: order_by
+}
+
+"""aggregate var_samp on columns"""
+type sale_transactions_var_samp_fields {
+  item_count: Float
+  net_amount: Float
+  profit: Float
+}
+
+"""
+order by var_samp() on columns of table "sale_transactions"
+"""
+input sale_transactions_var_samp_order_by {
+  item_count: order_by
+  net_amount: order_by
+  profit: order_by
+}
+
+"""aggregate variance on columns"""
+type sale_transactions_variance_fields {
+  item_count: Float
+  net_amount: Float
+  profit: Float
+}
+
+"""
+order by variance() on columns of table "sale_transactions"
+"""
+input sale_transactions_variance_order_by {
+  item_count: order_by
+  net_amount: order_by
+  profit: order_by
+}
+
+"""
+columns and relationships of "sold_items"
+"""
+type sold_items {
+  """An object relationship"""
+  inventory: inventory
+  item_id: String
+
+  """An object relationship"""
+  sale_transaction: sale_transactions
+  sold_item_count: bigint!
+  transaction_id: String
+}
+
+"""
+aggregated selection of "sold_items"
+"""
+type sold_items_aggregate {
+  aggregate: sold_items_aggregate_fields
+  nodes: [sold_items!]!
+}
+
+input sold_items_aggregate_bool_exp {
+  count: sold_items_aggregate_bool_exp_count
+}
+
+input sold_items_aggregate_bool_exp_count {
+  arguments: [sold_items_select_column!]
+  distinct: Boolean
+  filter: sold_items_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"""
+aggregate fields of "sold_items"
+"""
+type sold_items_aggregate_fields {
+  avg: sold_items_avg_fields
+  count(columns: [sold_items_select_column!], distinct: Boolean): Int!
+  max: sold_items_max_fields
+  min: sold_items_min_fields
+  stddev: sold_items_stddev_fields
+  stddev_pop: sold_items_stddev_pop_fields
+  stddev_samp: sold_items_stddev_samp_fields
+  sum: sold_items_sum_fields
+  var_pop: sold_items_var_pop_fields
+  var_samp: sold_items_var_samp_fields
+  variance: sold_items_variance_fields
+}
+
+"""
+order by aggregate values of table "sold_items"
+"""
+input sold_items_aggregate_order_by {
+  avg: sold_items_avg_order_by
+  count: order_by
+  max: sold_items_max_order_by
+  min: sold_items_min_order_by
+  stddev: sold_items_stddev_order_by
+  stddev_pop: sold_items_stddev_pop_order_by
+  stddev_samp: sold_items_stddev_samp_order_by
+  sum: sold_items_sum_order_by
+  var_pop: sold_items_var_pop_order_by
+  var_samp: sold_items_var_samp_order_by
+  variance: sold_items_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "sold_items"
+"""
+input sold_items_arr_rel_insert_input {
+  data: [sold_items_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: sold_items_on_conflict
+}
+
+"""aggregate avg on columns"""
+type sold_items_avg_fields {
+  sold_item_count: Float
+}
+
+"""
+order by avg() on columns of table "sold_items"
+"""
+input sold_items_avg_order_by {
+  sold_item_count: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "sold_items". All fields are combined with a logical 'AND'.
+"""
+input sold_items_bool_exp {
+  _and: [sold_items_bool_exp!]
+  _not: sold_items_bool_exp
+  _or: [sold_items_bool_exp!]
+  inventory: inventory_bool_exp
+  item_id: String_comparison_exp
+  sale_transaction: sale_transactions_bool_exp
+  sold_item_count: bigint_comparison_exp
+  transaction_id: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "sold_items"
+"""
+enum sold_items_constraint {
+  """
+  unique or primary key constraint on columns "sold_item_count"
+  """
+  sold_items_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "sold_items"
+"""
+input sold_items_inc_input {
+  sold_item_count: bigint
+}
+
+"""
+input type for inserting data into table "sold_items"
+"""
+input sold_items_insert_input {
+  inventory: inventory_obj_rel_insert_input
+  item_id: String
+  sale_transaction: sale_transactions_obj_rel_insert_input
+  sold_item_count: bigint
+  transaction_id: String
+}
+
+"""aggregate max on columns"""
+type sold_items_max_fields {
+  item_id: String
+  sold_item_count: bigint
+  transaction_id: String
+}
+
+"""
+order by max() on columns of table "sold_items"
+"""
+input sold_items_max_order_by {
+  item_id: order_by
+  sold_item_count: order_by
+  transaction_id: order_by
+}
+
+"""aggregate min on columns"""
+type sold_items_min_fields {
+  item_id: String
+  sold_item_count: bigint
+  transaction_id: String
+}
+
+"""
+order by min() on columns of table "sold_items"
+"""
+input sold_items_min_order_by {
+  item_id: order_by
+  sold_item_count: order_by
+  transaction_id: order_by
+}
+
+"""
+response of any mutation on the table "sold_items"
+"""
+type sold_items_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [sold_items!]!
+}
+
+"""
+on_conflict condition type for table "sold_items"
+"""
+input sold_items_on_conflict {
+  constraint: sold_items_constraint!
+  update_columns: [sold_items_update_column!]! = []
+  where: sold_items_bool_exp
+}
+
+"""Ordering options when selecting data from "sold_items"."""
+input sold_items_order_by {
+  inventory: inventory_order_by
+  item_id: order_by
+  sale_transaction: sale_transactions_order_by
+  sold_item_count: order_by
+  transaction_id: order_by
+}
+
+"""primary key columns input for table: sold_items"""
+input sold_items_pk_columns_input {
+  sold_item_count: bigint!
+}
+
+"""
+select columns of table "sold_items"
+"""
+enum sold_items_select_column {
+  """column name"""
+  item_id
+
+  """column name"""
+  sold_item_count
+
+  """column name"""
+  transaction_id
+}
+
+"""
+input type for updating data in table "sold_items"
+"""
+input sold_items_set_input {
+  item_id: String
+  sold_item_count: bigint
+  transaction_id: String
+}
+
+"""aggregate stddev on columns"""
+type sold_items_stddev_fields {
+  sold_item_count: Float
+}
+
+"""
+order by stddev() on columns of table "sold_items"
+"""
+input sold_items_stddev_order_by {
+  sold_item_count: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type sold_items_stddev_pop_fields {
+  sold_item_count: Float
+}
+
+"""
+order by stddev_pop() on columns of table "sold_items"
+"""
+input sold_items_stddev_pop_order_by {
+  sold_item_count: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type sold_items_stddev_samp_fields {
+  sold_item_count: Float
+}
+
+"""
+order by stddev_samp() on columns of table "sold_items"
+"""
+input sold_items_stddev_samp_order_by {
+  sold_item_count: order_by
+}
+
+"""
+Streaming cursor of the table "sold_items"
+"""
+input sold_items_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: sold_items_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input sold_items_stream_cursor_value_input {
+  item_id: String
+  sold_item_count: bigint
+  transaction_id: String
+}
+
+"""aggregate sum on columns"""
+type sold_items_sum_fields {
+  sold_item_count: bigint
+}
+
+"""
+order by sum() on columns of table "sold_items"
+"""
+input sold_items_sum_order_by {
+  sold_item_count: order_by
+}
+
+"""
+update columns of table "sold_items"
+"""
+enum sold_items_update_column {
+  """column name"""
+  item_id
+
+  """column name"""
+  sold_item_count
+
+  """column name"""
+  transaction_id
+}
+
+input sold_items_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: sold_items_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: sold_items_set_input
+
+  """filter the rows which have to be updated"""
+  where: sold_items_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type sold_items_var_pop_fields {
+  sold_item_count: Float
+}
+
+"""
+order by var_pop() on columns of table "sold_items"
+"""
+input sold_items_var_pop_order_by {
+  sold_item_count: order_by
+}
+
+"""aggregate var_samp on columns"""
+type sold_items_var_samp_fields {
+  sold_item_count: Float
+}
+
+"""
+order by var_samp() on columns of table "sold_items"
+"""
+input sold_items_var_samp_order_by {
+  sold_item_count: order_by
+}
+
+"""aggregate variance on columns"""
+type sold_items_variance_fields {
+  sold_item_count: Float
+}
+
+"""
+order by variance() on columns of table "sold_items"
+"""
+input sold_items_variance_order_by {
+  sold_item_count: order_by
+}
+
+type subscription_root {
+  """
+  fetch data from the table: "customers"
+  """
+  customers(
+    """distinct select on columns"""
+    distinct_on: [customers_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [customers_order_by!]
+
+    """filter the rows returned"""
+    where: customers_bool_exp
+  ): [customers!]!
+
+  """
+  fetch aggregated fields from the table: "customers"
+  """
+  customers_aggregate(
+    """distinct select on columns"""
+    distinct_on: [customers_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [customers_order_by!]
+
+    """filter the rows returned"""
+    where: customers_bool_exp
+  ): customers_aggregate!
+
+  """fetch data from the table: "customers" using primary key columns"""
+  customers_by_pk(customer_id: String!): customers
+
+  """
+  fetch data from the table in a streaming manner: "customers"
+  """
+  customers_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [customers_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: customers_bool_exp
+  ): [customers!]!
+
+  """
+  fetch data from the table: "employees"
+  """
+  employees(
+    """distinct select on columns"""
+    distinct_on: [employees_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [employees_order_by!]
+
+    """filter the rows returned"""
+    where: employees_bool_exp
+  ): [employees!]!
+
+  """
+  fetch aggregated fields from the table: "employees"
+  """
+  employees_aggregate(
+    """distinct select on columns"""
+    distinct_on: [employees_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [employees_order_by!]
+
+    """filter the rows returned"""
+    where: employees_bool_exp
+  ): employees_aggregate!
+
+  """fetch data from the table: "employees" using primary key columns"""
+  employees_by_pk(employee_id: String!): employees
+
+  """
+  fetch data from the table in a streaming manner: "employees"
+  """
+  employees_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [employees_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: employees_bool_exp
+  ): [employees!]!
+
+  """
+  fetch data from the table: "inventory"
+  """
+  inventory(
+    """distinct select on columns"""
+    distinct_on: [inventory_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [inventory_order_by!]
+
+    """filter the rows returned"""
+    where: inventory_bool_exp
+  ): [inventory!]!
+
+  """
+  fetch aggregated fields from the table: "inventory"
+  """
+  inventory_aggregate(
+    """distinct select on columns"""
+    distinct_on: [inventory_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [inventory_order_by!]
+
+    """filter the rows returned"""
+    where: inventory_bool_exp
+  ): inventory_aggregate!
+
+  """fetch data from the table: "inventory" using primary key columns"""
+  inventory_by_pk(item_id: String!): inventory
+
+  """
+  fetch data from the table in a streaming manner: "inventory"
+  """
+  inventory_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [inventory_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: inventory_bool_exp
+  ): [inventory!]!
+
+  """An array relationship"""
+  sale_transactions(
+    """distinct select on columns"""
+    distinct_on: [sale_transactions_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [sale_transactions_order_by!]
+
+    """filter the rows returned"""
+    where: sale_transactions_bool_exp
+  ): [sale_transactions!]!
+
+  """An aggregate relationship"""
+  sale_transactions_aggregate(
+    """distinct select on columns"""
+    distinct_on: [sale_transactions_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [sale_transactions_order_by!]
+
+    """filter the rows returned"""
+    where: sale_transactions_bool_exp
+  ): sale_transactions_aggregate!
+
+  """
+  fetch data from the table: "sale_transactions" using primary key columns
+  """
+  sale_transactions_by_pk(transaction_id: String!): sale_transactions
+
+  """
+  fetch data from the table in a streaming manner: "sale_transactions"
+  """
+  sale_transactions_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [sale_transactions_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: sale_transactions_bool_exp
+  ): [sale_transactions!]!
+
+  """An array relationship"""
+  sold_items(
+    """distinct select on columns"""
+    distinct_on: [sold_items_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [sold_items_order_by!]
+
+    """filter the rows returned"""
+    where: sold_items_bool_exp
+  ): [sold_items!]!
+
+  """An aggregate relationship"""
+  sold_items_aggregate(
+    """distinct select on columns"""
+    distinct_on: [sold_items_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [sold_items_order_by!]
+
+    """filter the rows returned"""
+    where: sold_items_bool_exp
+  ): sold_items_aggregate!
+
+  """fetch data from the table: "sold_items" using primary key columns"""
+  sold_items_by_pk(sold_item_count: bigint!): sold_items
+
+  """
+  fetch data from the table in a streaming manner: "sold_items"
+  """
+  sold_items_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [sold_items_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: sold_items_bool_exp
+  ): [sold_items!]!
+}
+

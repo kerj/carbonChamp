@@ -1,0 +1,7 @@
+subscription StreamCustomersByFN($fn_ilike: String) {
+  customers_stream(batch_size: 10, cursor: {initial_value: {first_name: ""}, ordering: ASC}, where: {first_name: {_ilike: $fn_ilike}}) {
+    email_address
+    first_name
+    last_name
+  }
+}

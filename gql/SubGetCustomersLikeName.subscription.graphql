@@ -1,0 +1,7 @@
+subscription SubGetCustomersLikeName($limit: Int, $fn_like: String) {
+  customers(limit: $limit, where: {first_name: {_like: $fn_like}}) {
+    email_address
+    first_name
+    last_name
+  }
+}

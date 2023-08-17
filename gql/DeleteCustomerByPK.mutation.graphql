@@ -1,0 +1,7 @@
+mutation DeleteCustomerByPK ($customer_id: String!){
+  delete_customers_by_pk(customer_id: $customer_id) {
+    email_address
+    first_name
+    last_name
+  }
+}
