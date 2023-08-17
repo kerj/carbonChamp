@@ -1,7 +1,5 @@
-import { useApolloClient } from '@apollo/client';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { GetCustomersLikeNameDocument, useCreateCustomerMutation, useDeleteCustomerByPkMutation, useGetCustomersLikeNameQuery } from '../generated/graphql';
 import { CallbackButton } from './CallbackButton';
 import Table from './Table';
 
@@ -14,61 +12,23 @@ export type ContextType = {
 }
 
 export const Display = ({ initData }: { initData?: any }) => {
-  const client = useApolloClient()
 
-  useGetCustomersLikeNameQuery({
-    variables: { limit: 19, first_name_term: "Le%" },
-  })
-  // reads from cache for this query
-  const customers = client.readQuery({
-    query: GetCustomersLikeNameDocument,
-    variables: { limit: 19, first_name_term: "Le%" }
-  })
-
-  const [deleteCustomerByPkMutation] = useDeleteCustomerByPkMutation({
-    fetchPolicy: 'network-only',
-  })
-  const [createCustomerMutation] = useCreateCustomerMutation({
-    fetchPolicy: "network-only",
-  })
-  const onAdd = () => {
-    createCustomerMutation({
-      variables: {
-        customer_id: "this-is-a-customerId",
-        email_address: "test@test.com",
-        last_name: "James",
-        first_name: "LeBron"
-      },
-      refetchQueries: [{ query: GetCustomersLikeNameDocument, variables: { limit: 19, first_name_term: "Le%" } }]
-    })
-  }
-  const onRemove = () => {
-    deleteCustomerByPkMutation({
-      variables: {
-        customer_id: "this-is-a-customerId"
-      },
-      refetchQueries: [{
-        query: GetCustomersLikeNameDocument,
-        variables: { limit: 19, first_name_term: "Le%" }
-      }]
-    })
-  }
 
   return (
     <>
       {
         true &&
         <>
-          <CallbackButton callback={onAdd} text="Add"></CallbackButton>
-          <CallbackButton callback={onRemove} text="remove"></CallbackButton>
+          <CallbackButton callback={() => console.log('add')} text="Add"></CallbackButton>
+          <CallbackButton callback={() => console.log('remove')} text="remove"></CallbackButton>
           <Suspense>
-            <Table data={customers || initData} />
+            <Table data={initData} />
 
           </Suspense>
           <Link
-            href="/search/customer-search"
+            href="/quoteDisplay/quotes"
           >
-            To Customer Search
+            To quote page
           </Link>
         </>
       }
