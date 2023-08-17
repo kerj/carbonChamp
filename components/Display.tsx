@@ -1,5 +1,3 @@
-import Link from 'next/link'
-import { CallbackButton } from './CallbackButton'
 import { useContext } from 'react'
 import { DataContext } from '../Context/DataContext'
 import styled from '@emotion/styled'
@@ -21,13 +19,7 @@ export const Display = () => {
       </ImageContainer>
       <Divider />
       <ButtonContainer>
-        {/* <Button href="/quoteDisplay/quotes" variant="contained">
-          Register New Ride
-        </Button>
-        <Button href="/quoteDisplay/quotes" variant="contained">
-          View Rides
-        </Button> */}
-        <Button href="/quoteDisplay/prompts" variant="contained">
+      <Button href="/quoteDisplay/prompts" variant="contained">
           Carbon Stats
         </Button>
       </ButtonContainer>

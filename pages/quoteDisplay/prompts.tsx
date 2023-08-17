@@ -34,6 +34,11 @@ const Prompts = () => {
 
   return (
     <Container>
+      <div style={{ position: 'absolute', top: '20px', left: '20px' }}>
+        <Button href="/" variant="contained">
+          Home
+        </Button>
+      </div>
       <SubContainer>
         <TextField
           type="number"
@@ -48,7 +53,8 @@ const Prompts = () => {
       {CO2 !== null && fetch && (
         <DataProvider<any>
           requestMetas={{
-            url: 'https://api.openai.com/v1/chat/completions',
+            // url: 'https://api.openai.com/v1/chat/completions',
+            url: '',
             options: {
               method: 'post',
               headers: {
