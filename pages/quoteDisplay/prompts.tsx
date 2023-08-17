@@ -60,7 +60,7 @@ const Prompts = () => {
                   {
                     role: 'system',
                     content:
-                      'You are a narrator, you will respond with one specific example in three sentences about relatable instances of what could be done with the amount of saved carbon',
+                      'You will respond in under 100 words with a very random example of what you could do with the energy saved from the carbon',
                   },
                   {
                     role: 'user',
