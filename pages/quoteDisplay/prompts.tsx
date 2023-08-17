@@ -33,54 +33,58 @@ const Prompts = () => {
   }
 
   return (
-    <Container>
-      <div style={{ position: 'absolute', top: '20px', left: '20px' }}>
-        <Button href="/" variant="contained">
-          Home
-        </Button>
-      </div>
-      <SubContainer>
-        <TextField
-          type="number"
-          label="Enter Miles Ridden"
-          onChange={(e) => changeMiles(e.target.value)}
-        />
-        <Button onClick={() => setFetch(true)} variant="contained">
-          Submit Miles
-        </Button>
-      </SubContainer>
-      {CO2 !== null && fetch && <h2>Carbon Saved: {CO2}kg C02</h2>}
-      {CO2 !== null && fetch && (
-        <DataProvider<any>
-          requestMetas={{
-            url: 'https://api.openai.com/v1/chat/completions',
-            options: {
-              method: 'post',
-              headers: {
-                Authorization: `Bearer ${process.env.NEXT_PUBLIC_OPEN_API_KEY}`,
+    <>
+      <Title>Carbon Champ</Title>
+
+      <Container>
+        <div style={{ position: 'absolute', top: '20px', left: '20px' }}>
+          <Button href="/" variant="contained">
+            Home
+          </Button>
+        </div>
+        <SubContainer>
+          <TextField
+            type="number"
+            label="Enter Miles Ridden"
+            onChange={(e) => changeMiles(e.target.value)}
+          />
+          <Button onClick={() => setFetch(true)} variant="contained">
+            Submit Miles
+          </Button>
+        </SubContainer>
+        {CO2 !== null && fetch && <h2>Carbon Saved: {CO2}kg C02</h2>}
+        {CO2 !== null && fetch && (
+          <DataProvider<any>
+            requestMetas={{
+              url: 'https://api.openai.com/v1/chat/completions',
+              options: {
+                method: 'post',
+                headers: {
+                  Authorization: `Bearer ${process.env.NEXT_PUBLIC_OPEN_API_KEY}`,
+                },
+                data: {
+                  model: 'gpt-3.5-turbo',
+                  messages: [
+                    {
+                      role: 'system',
+                      content:
+                        'You will respond in under 100 words with a very random example of what you could do with the energy saved from the carbon',
+                    },
+                    {
+                      role: 'user',
+                      content: `I saved ${CO2}kg of c02 emissions`,
+                    },
+                  ],
+                  temperature: 1.2,
+                } as any,
               },
-              data: {
-                model: 'gpt-3.5-turbo',
-                messages: [
-                  {
-                    role: 'system',
-                    content:
-                      'You will respond in under 100 words with a very random example of what you could do with the energy saved from the carbon',
-                  },
-                  {
-                    role: 'user',
-                    content: `I saved ${CO2}kg of c02 emissions`,
-                  },
-                ],
-                temperature: 1.2,
-              } as any,
-            },
-          }}
-        >
-          <DataViewer />
-        </DataProvider>
-      )}
-    </Container>
+            }}
+          >
+            <DataViewer />
+          </DataProvider>
+        )}
+      </Container>
+    </>
   )
 }
 
@@ -126,4 +130,12 @@ const Container = styled.div`
   justify-content: center;
   gap: 16px;
   margin: 24px;
+`
+
+const Title = styled.h1`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-style: italic;
 `
