@@ -21,12 +21,12 @@ export const Display = () => {
       </ImageContainer>
       <Divider />
       <ButtonContainer>
-        <Button href="/quoteDisplay/quotes" variant="contained">
+        {/* <Button href="/quoteDisplay/quotes" variant="contained">
           Register New Ride
         </Button>
         <Button href="/quoteDisplay/quotes" variant="contained">
           View Rides
-        </Button>
+        </Button> */}
         <Button href="/quoteDisplay/prompts" variant="contained">
           Carbon Stats
         </Button>

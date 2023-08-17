@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { DataContext, DataProvider } from '../../Context/DataContext'
-import { Card, CircularProgress, TextField } from '@mui/material'
+import { Button, Card, CircularProgress, TextField } from '@mui/material'
 import styled from '@emotion/styled'
 
 export type ContextType = {
@@ -25,6 +25,7 @@ const Prompts = () => {
   // miles * 0.347
 
   const changeMiles = (miles: string) => {
+    setFetch(false)
     try {
       const mileNumber = parseFloat(miles)
       setMiles(mileNumber)
@@ -32,9 +33,19 @@ const Prompts = () => {
   }
 
   return (
-    <div>
-      <TextField type="number" onChange={(e) => changeMiles(e.target.value)} />
-      {CO2 !== null && (
+    <Container>
+      <SubContainer>
+        <TextField
+          type="number"
+          label="Enter Miles Ridden"
+          onChange={(e) => changeMiles(e.target.value)}
+        />
+        <Button onClick={() => setFetch(true)} variant="contained">
+          Submit Miles
+        </Button>
+      </SubContainer>
+      {CO2 !== null && fetch && <h2>Carbon Saved: {CO2}kg C02</h2>}
+      {CO2 !== null && fetch && (
         <DataProvider<any>
           requestMetas={{
             url: 'https://api.openai.com/v1/chat/completions',
@@ -49,7 +60,7 @@ const Prompts = () => {
                   {
                     role: 'system',
                     content:
-                      'You are a narrator, you will respond with one very random specific example about relatable instances of what could be done with the amount of saved carbon, respond in an iambic pentameter',
+                      'You are a narrator, you will respond with one specific example in three sentences about relatable instances of what could be done with the amount of saved carbon',
                   },
                   {
                     role: 'user',
@@ -64,7 +75,7 @@ const Prompts = () => {
           <DataViewer />
         </DataProvider>
       )}
-    </div>
+    </Container>
   )
 }
 
@@ -94,4 +105,20 @@ const StyledCard = styled(Card)`
   margin: 32px;
   padding: 32px;
   font-family: fantasy;
+`
+
+const SubContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 24px;
+`
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 24px;
 `
