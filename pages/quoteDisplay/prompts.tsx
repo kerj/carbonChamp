@@ -83,6 +83,9 @@ const Prompts = () => {
             <DataViewer />
           </DataProvider>
         )}
+        {CO2 !== null && fetch && (
+          <StyledCard>(Actual results may vary)</StyledCard>
+        )}
       </Container>
     </>
   )
